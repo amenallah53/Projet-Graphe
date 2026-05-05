@@ -31,12 +31,15 @@ class MenuScreen:
         self.done = False
         self._setup_ui()
 
+    def on_resize(self, w: int, h: int) -> None:
+        self._setup_ui()
+
     # ------------------------------------------------------------------
     # UI construction
     # ------------------------------------------------------------------
 
     def _setup_ui(self) -> None:
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         cx = W // 2
 
         self._font_title  = pygame.font.SysFont("dejavusansmono", 32, bold=True)
@@ -87,7 +90,7 @@ class MenuScreen:
     def draw(self) -> None:
         self.surface.fill(COLOR_BG)
         self._draw_background_grid()
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
 
         # --- Title ---
         title = self._font_title.render(
@@ -124,13 +127,13 @@ class MenuScreen:
         """Subtle dot-grid background."""
         spacing = 40
         col = (25, 30, 50)
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         for x in range(0, W, spacing):
             for y in range(0, H, spacing):
                 pygame.draw.circle(self.surface, col, (x, y), 1)
 
     def _draw_creators(self) -> None:
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         header = self._font_small.render("Created by:", True, COLOR_TEXT_DIM)
         base_y = H // 2 + 120
         self.surface.blit(header, header.get_rect(center=(W // 2, base_y)))

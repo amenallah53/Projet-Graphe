@@ -3,8 +3,8 @@
 # ============================================================
 
 # --- Window ---
-WINDOW_WIDTH = 1400
-WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 800
 WINDOW_TITLE = "Graph Algorithms Visualization Platform"
 FPS = 60
 
@@ -18,6 +18,7 @@ COLOR_ACCENT         = (0,   122, 255)  # Vibrant primary blue
 COLOR_SUCCESS        = (35,  200, 100)  # Crisp, bright green
 COLOR_WARNING        = (255, 150, 40)   # Punchy orange
 COLOR_DANGER         = (240, 60,  80)   # Vivid red
+COLOR_WEIGHT_BG      = (15, 17, 26, 200) # Dark background for weights
 
 # --- Node visual ---
 NODE_RADIUS          = 22
@@ -44,6 +45,9 @@ NODE_COLOR_COMPONENT = [
     (180, 220, 100),  # Lime green
     (200, 180, 240),  # Periwinkle
 ]
+
+NODE_COLOR_START = (255, 100, 0)   # Vivid orange for Eulerian start
+NODE_COLOR_END   = (200, 0, 255)   # Vivid purple for Eulerian end
 
 # --- Edge visual ---
 EDGE_WIDTH         = 2

@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 from animation.events import VISIT_NODE, TRAVERSE_EDGE, FINAL_PATH
 from algorithms.components.connected import connected_components
 from algorithms.components.scc import strongly_connected_components
+from utils.constants import NODE_COLOR_START, NODE_COLOR_END
 
 def eulerian(graph: "Graph", source: int = None) -> List[Dict]:
     """
@@ -185,12 +186,25 @@ def eulerian(graph: "Graph", source: int = None) -> List[Dict]:
         
     # Génération des étapes d'animation
     steps = []
-    steps.append({"type": VISIT_NODE, "node": path[0]})
+    # Color start node
+    steps.append({"type": VISIT_NODE, "node": path[0], "color": NODE_COLOR_START})
+    
     for i in range(len(path) - 1):
         steps.append({"type": TRAVERSE_EDGE, "src": path[i], "dest": path[i+1]})
-        steps.append({"type": VISIT_NODE, "node": path[i+1]})
         
-    steps.append({"type": FINAL_PATH, "path": path, "message": eulerian_type})
+        # Color end node differently if it's the last node in the path
+        if i == len(path) - 2:
+            steps.append({"type": VISIT_NODE, "node": path[i+1], "color": NODE_COLOR_END})
+        else:
+            steps.append({"type": VISIT_NODE, "node": path[i+1]})
+        
+    steps.append({
+        "type": FINAL_PATH,
+        "path": path,
+        "message": eulerian_type,
+        "start_color": NODE_COLOR_START,
+        "end_color": NODE_COLOR_END
+    })
     print(f"start: {a}, end: {b}")
     print(f"Chemin/Circuit Eulérien: {path}")
     return steps

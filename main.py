@@ -25,7 +25,7 @@ def main() -> None:
     # ------------------------------------------------------------------
     pygame.init()
     pygame.display.set_caption(WINDOW_TITLE)
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.RESIZABLE)
     clock  = pygame.time.Clock()
 
     while True:
@@ -45,6 +45,11 @@ def main() -> None:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit(0)
+                if event.type == pygame.VIDEORESIZE:
+                    screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                    menu.surface = screen
+                    if hasattr(menu, 'on_resize'):
+                        menu.on_resize(event.w, event.h)
                 menu.handle_event(event)
 
             menu.update(dt)
@@ -75,6 +80,11 @@ def main() -> None:
                     running = False
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                     running = False
+                if event.type == pygame.VIDEORESIZE:
+                    screen = pygame.display.set_mode((event.w, event.h), pygame.RESIZABLE)
+                    sandbox.surface = screen
+                    if hasattr(sandbox, 'on_resize'):
+                        sandbox.on_resize(event.w, event.h)
                 sandbox.handle_event(event)
                 sandbox._code_panel.handle_event(event)
 

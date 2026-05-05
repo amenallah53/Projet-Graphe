@@ -85,7 +85,8 @@ class Renderer:
 
         if event_type == ev.VISIT_NODE:
             node = step["node"]
-            state.node_colors[node] = NODE_COLOR_VISITED
+            color = step.get("color", NODE_COLOR_VISITED)
+            state.node_colors[node] = color
 
         elif event_type == ev.PROCESS_NODE:
             node = step["node"]
@@ -136,11 +137,20 @@ class Renderer:
             state.path_nodes = list(path)
             for node in path:
                 state.node_colors[node] = NODE_COLOR_PATH
+            
+            # Apply start/end color overrides if provided
+            if "start_color" in step and path:
+                state.node_colors[path[0]] = step["start_color"]
+            if "end_color" in step and path:
+                state.node_colors[path[-1]] = step["end_color"]
+
             # Colour the path edges
             for i in range(len(path) - 1):
                 key = (min(path[i], path[i + 1]), max(path[i], path[i + 1]))
                 state.edge_colors[key] = EDGE_COLOR_FINAL
-                state.highlighted_edges.append((path[i], path[i + 1]))
+                if (path[i], path[i + 1]) not in state.highlighted_edges and \
+                   (path[i+1], path[i]) not in state.highlighted_edges:
+                    state.highlighted_edges.append((path[i], path[i + 1]))
 
         elif event_type == ev.FINAL_TREE:
             edges = step["edges"]

@@ -70,6 +70,9 @@ class SandboxScreen:
         self._setup_fonts()
         self._setup_ui()
 
+    def on_resize(self, w: int, h: int) -> None:
+        self._setup_ui()
+
     # ------------------------------------------------------------------
     # Fonts
     # ------------------------------------------------------------------
@@ -92,7 +95,7 @@ class SandboxScreen:
 
     def _setup_ui(self) -> None:
         from algorithms.registry import list_algorithms
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         sx = W - SIDEBAR_WIDTH + 10
         bw = SIDEBAR_WIDTH - 20
 
@@ -529,7 +532,7 @@ class SandboxScreen:
         """Dot-grid canvas background."""
         spacing = 32
         color = (22, 26, 42)
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         ox, oy = self._offset
         for x in range(0, W - SIDEBAR_WIDTH, spacing):
             for y in range(TOPBAR_HEIGHT, H, spacing):
@@ -538,10 +541,11 @@ class SandboxScreen:
                 pygame.draw.circle(self.surface, color, (gx, gy), 1)
 
     def _draw_graph(self) -> None:
+        W, H = self.surface.get_size()
         clip_rect = pygame.Rect(
             0, TOPBAR_HEIGHT,
-            WINDOW_WIDTH - SIDEBAR_WIDTH,
-            WINDOW_HEIGHT - TOPBAR_HEIGHT - 24,
+            W - SIDEBAR_WIDTH,
+            H - TOPBAR_HEIGHT - 24,
         )
         self.surface.set_clip(clip_rect)
         draw_graph(
@@ -554,7 +558,7 @@ class SandboxScreen:
         self.surface.set_clip(None)
 
     def _draw_sidebar(self) -> None:
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         sb_rect = pygame.Rect(W - SIDEBAR_WIDTH, 0, SIDEBAR_WIDTH, H)
         pygame.draw.rect(self.surface, COLOR_PANEL, sb_rect)
         pygame.draw.line(self.surface, COLOR_BORDER, sb_rect.topleft, sb_rect.bottomleft, 1)
@@ -596,7 +600,7 @@ class SandboxScreen:
 
         # Speed slider label
         spd_lbl = self._font_small.render("Step speed:", True, COLOR_TEXT_DIM)
-        self.surface.blit(spd_lbl, (sb_rect.x + 10, WINDOW_HEIGHT - 85))
+        self.surface.blit(spd_lbl, (sb_rect.x + 10, H - 85))
         self._slider_speed.draw(self.surface)
 
         self._btn_clear.draw(self.surface)
@@ -605,7 +609,7 @@ class SandboxScreen:
         # Progress bar
         if self.ctrl.engine:
             prog = self.ctrl.engine.progress
-            bar_rect = pygame.Rect(sb_rect.x + 10, WINDOW_HEIGHT - 100, SIDEBAR_WIDTH - 20, 6)
+            bar_rect = pygame.Rect(sb_rect.x + 10, H - 100, SIDEBAR_WIDTH - 20, 6)
             pygame.draw.rect(self.surface, COLOR_BORDER, bar_rect, border_radius=3)
             fill_w = int(bar_rect.width * prog)
             if fill_w > 0:
@@ -621,7 +625,8 @@ class SandboxScreen:
             self.surface.blit(step_lbl, (bar_rect.right - step_lbl.get_width(), bar_rect.y - 14))
 
     def _draw_topbar(self) -> None:
-        top_rect = pygame.Rect(0, 0, WINDOW_WIDTH - SIDEBAR_WIDTH, TOPBAR_HEIGHT)
+        W, H = self.surface.get_size()
+        top_rect = pygame.Rect(0, 0, W - SIDEBAR_WIDTH, TOPBAR_HEIGHT)
         pygame.draw.rect(self.surface, COLOR_PANEL, top_rect)
         pygame.draw.line(self.surface, COLOR_BORDER,
                          (0, TOPBAR_HEIGHT), (top_rect.right, TOPBAR_HEIGHT), 1)
@@ -635,13 +640,13 @@ class SandboxScreen:
             "LClick:add node | Select + LClick:edge | RClick:delete | MMB:pan",
             True, COLOR_TEXT_DIM,
         )
-        self.surface.blit(hint, (WINDOW_WIDTH - SIDEBAR_WIDTH - hint.get_width() - 12,
+        self.surface.blit(hint, (W - SIDEBAR_WIDTH - hint.get_width() - 12,
                                  TOPBAR_HEIGHT // 2 - hint.get_height() // 2))
 
 
     def _draw_status(self) -> None:
-        H = WINDOW_HEIGHT
-        bar = pygame.Rect(0, H - 24, WINDOW_WIDTH - SIDEBAR_WIDTH, 24)
+        W, H = self.surface.get_size()
+        bar = pygame.Rect(0, H - 24, W - SIDEBAR_WIDTH, 24)
         msg = self._error_msg if self._error_timer > 0 else self._status
         color = (200, 60, 60) if self._error_timer > 0 else None
         draw_status_bar(self.surface, bar, msg)
@@ -684,10 +689,11 @@ class SandboxScreen:
     def _is_canvas_pos(self, screen_pos: tuple) -> bool:
         """Return True if the screen position is within the canvas area."""
         x, y = screen_pos
+        W, H = self.surface.get_size()
         return (
-            x < WINDOW_WIDTH - SIDEBAR_WIDTH and
+            x < W - SIDEBAR_WIDTH and
             y > TOPBAR_HEIGHT and
-            y < WINDOW_HEIGHT - 24
+            y < H - 24
         )
 
     def _to_graph_coords(self, screen_pos: tuple) -> tuple:

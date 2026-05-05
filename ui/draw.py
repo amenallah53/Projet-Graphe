@@ -14,7 +14,7 @@ from utils.constants import (
     NODE_RADIUS, EDGE_WIDTH,
     NODE_COLOR_DEFAULT, NODE_COLOR_BORDER, NODE_COLOR_SOURCE,
     EDGE_COLOR_DEFAULT, COLOR_TEXT, COLOR_TEXT_DIM, COLOR_WARNING,
-    COLOR_ACCENT,
+    COLOR_ACCENT, COLOR_WEIGHT_BG,
 )
 
 if TYPE_CHECKING:
@@ -79,7 +79,7 @@ def draw_edge(
         lbl_rect = lbl_surf.get_rect(center=(mid_x + off_x, mid_y + off_y))
         # Small dark background for readability
         bg = lbl_rect.inflate(4, 2)
-        pygame.draw.rect(surface, (15, 17, 26, 180), bg)
+        pygame.draw.rect(surface, COLOR_WEIGHT_BG, bg)
         surface.blit(lbl_surf, lbl_rect)
 
 
