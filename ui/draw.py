@@ -14,7 +14,7 @@ from utils.constants import (
     NODE_RADIUS, EDGE_WIDTH,
     NODE_COLOR_DEFAULT, NODE_COLOR_BORDER, NODE_COLOR_SOURCE,
     EDGE_COLOR_DEFAULT, COLOR_TEXT, COLOR_TEXT_DIM, COLOR_WARNING,
-    COLOR_ACCENT, COLOR_WEIGHT_BG,
+    COLOR_ACCENT, COLOR_WEIGHT_BG, COLOR_WEIGHT_TEXT,
 )
 
 if TYPE_CHECKING:
@@ -75,7 +75,7 @@ def draw_edge(
         dx, dy = x2 - x1, y2 - y1
         length = math.hypot(dx, dy) or 1
         off_x, off_y = -dy / length * 12, dx / length * 12
-        lbl_surf = _FONT_WEIGHT.render(label, True, COLOR_WARNING)
+        lbl_surf = _FONT_WEIGHT.render(label, True, COLOR_WEIGHT_TEXT)
         lbl_rect = lbl_surf.get_rect(center=(mid_x + off_x, mid_y + off_y))
         # Small dark background for readability
         bg = lbl_rect.inflate(4, 2)

@@ -656,7 +656,7 @@ class SandboxScreen:
             self.surface.blit(lbl, (bar.x + 12, bar.centery - lbl.get_height() // 2))
 
     def _draw_weight_popup(self) -> None:
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         overlay = pygame.Surface((W, H), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 120))
         self.surface.blit(overlay, (0, 0))
@@ -669,17 +669,27 @@ class SandboxScreen:
         self._btn_confirm_weight.draw(self.surface)
 
     def _draw_alert_popup(self) -> None:
-        W, H = WINDOW_WIDTH, WINDOW_HEIGHT
+        W, H = self.surface.get_size()
         overlay = pygame.Surface((W, H), pygame.SRCALPHA)
         overlay.fill((0, 0, 0, 120))
         self.surface.blit(overlay, (0, 0))
-        popup = pygame.Rect(W // 2 - 250, H // 2 - 60, 500, 120)
-        pygame.draw.rect(self.surface, COLOR_PANEL, popup, border_radius=8)
-        pygame.draw.rect(self.surface, COLOR_BORDER, popup, 2, border_radius=8)
         
-        lbl = self._font_ui.render(str(self._alert_msg), True, COLOR_TEXT)
-        self.surface.blit(lbl, lbl.get_rect(center=(W // 2, H // 2 - 20)))
+        # Adjust popup width based on message length
+        msg_str = str(self._alert_msg)
+        msg_surf = self._font_ui.render(msg_str, True, COLOR_TEXT)
+        popup_w = max(400, msg_surf.get_width() + 60)
+        popup_h = 140
+        popup = pygame.Rect(W // 2 - popup_w // 2, H // 2 - popup_h // 2, popup_w, popup_h)
         
+        pygame.draw.rect(self.surface, COLOR_PANEL, popup, border_radius=12)
+        pygame.draw.rect(self.surface, COLOR_BORDER, popup, 2, border_radius=12)
+        
+        # Message text centered
+        text_rect = msg_surf.get_rect(center=(W // 2, H // 2 - 20))
+        self.surface.blit(msg_surf, text_rect)
+        
+        # OK Button centered at the bottom of the popup
+        self._btn_alert_ok.rect.center = (W // 2, H // 2 + 35)
         self._btn_alert_ok.draw(self.surface)
 
     # ------------------------------------------------------------------

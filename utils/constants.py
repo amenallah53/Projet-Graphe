@@ -19,6 +19,7 @@ COLOR_SUCCESS        = (35,  200, 100)  # Crisp, bright green
 COLOR_WARNING        = (255, 150, 40)   # Punchy orange
 COLOR_DANGER         = (240, 60,  80)   # Vivid red
 COLOR_WEIGHT_BG      = (15, 17, 26, 200) # Dark background for weights
+COLOR_WEIGHT_TEXT    = (255, 255, 255)   # Clean white for weight labels
 
 # --- Node visual ---
 NODE_RADIUS          = 22

@@ -15,6 +15,12 @@ from animation.events import (
 def dijkstra(graph, source: int, destination: int) -> List[Dict]:
     steps: List[Dict] = []
     print(f"Running Dijkstra's algorithm from node {source} to node {destination}")
+    
+    # ❌ Dijkstra doesn't work with negative weights
+    for u, v, w in graph.edges:
+        if w < 0:
+            raise ValueError("Dijkstra's algorithm does not support negative edge weights. Please use Bellman-Ford instead.")
+
     adj = graph.to_adj_list()
     dist = {node: float("inf") for node in graph.nodes}
     parent = {node: None for node in graph.nodes}
